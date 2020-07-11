@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode keyLeft = KeyCode.Q;
     public KeyCode keyRight = KeyCode.D;
 
+    public Animator animator;
+
     bool canJump = true;
 
     Rigidbody2D rb;
@@ -47,6 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
         movement.x = Input.GetKey(keyLeft) ? movement.x - 1 : movement.x;
         movement.x = Input.GetKey(keyRight) ? movement.x + 1 : movement.x;
+
+        animator.SetBool("IsMoving", (movement.x != 0) ? true : false);
 
         transform.Translate(
             new Vector3(movement.x * moveSpeed * Time.fixedDeltaTime, 0, 0)
