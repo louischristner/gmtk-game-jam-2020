@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private LayerMask m_WhatIsGround;  // A mask determining what is ground to the character
+	[SerializeField] private Transform m_GroundCheck;   // A position marking where to check if the player is grounded.
+
+    [Range(0f, 1f)] public float airControl;
+
     public float moveSpeed = 5f;
     public float jumpForce = 500f;
 
-    public KeyCode keyUp = KeyCode.Z;
-    public KeyCode keyLeft = KeyCode.Q;
-    public KeyCode keyRight = KeyCode.D;
+    public KeyCode keyUp = KeyCode.UpArrow;
+    public KeyCode keyLeft = KeyCode.LeftArrow;
+    public KeyCode keyRight = KeyCode.RightArrow;
 
     public Animator animator;
 
+    Vector2 movement;
     bool canJump = true;
+    bool isFacingRight = true;
 
     Rigidbody2D rb;
 
@@ -22,39 +29,74 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        if (rb.velocity.y == 0) {
-            canJump = true;
-        } else {
-            canJump = false;
-        }
+        animator.SetBool("IsJumping", false);
 
         Move();
         Jump();
+
+        // check if player is on collision with ground / can jump
+
+        bool prevJump = canJump;
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, 0.2f, m_WhatIsGround);
+
+        canJump = false;
+		for (int i = 0; i < colliders.Length; i++) {
+			if (colliders[i].gameObject != gameObject) {
+				canJump = true;
+			}
+		}
+
+        animator.SetBool("IsFalling", rb.velocity.y < -0.1);
     }
 
     void Jump()
     {
         if (Input.GetKeyDown(keyUp)) {
             if (canJump) {
-                rb.AddForce(new Vector2(0, jumpForce));
+                rb.AddForce(new Vector2((jumpForce / 3) * movement.x, jumpForce));
+                animator.SetBool("IsJumping", true);
+                canJump = false;
             }
         }
     }
 
     void Move()
     {
-        Vector2 movement = new Vector2(0, 0);
+        movement = new Vector2(0, 0);
 
-        movement.x = Input.GetKey(keyLeft) ? movement.x - 1 : movement.x;
-        movement.x = Input.GetKey(keyRight) ? movement.x + 1 : movement.x;
+        if (Input.GetKey(keyLeft)) {
+            movement.x -= 1;
+            if (isFacingRight) {
+                Flip();
+            }
+        }
 
-        animator.SetBool("IsMoving", (movement.x != 0) ? true : false);
+        if (Input.GetKey(keyRight)) {
+            movement.x += 1;
+            if (!isFacingRight) {
+                Flip();
+            }
+        }
+
+        animator.SetBool("IsMoving",
+            (movement.x != 0) ? true : false
+        );
+
+        if (!canJump) {
+            movement.x = movement.x * airControl;
+        }
 
         transform.Translate(
-            new Vector3(movement.x * moveSpeed * Time.fixedDeltaTime, 0, 0)
+            new Vector3(movement.x * moveSpeed * Time.deltaTime, 0, 0)
         );
+    }
+
+    void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
 
     public void UpdateKeyMapping()
