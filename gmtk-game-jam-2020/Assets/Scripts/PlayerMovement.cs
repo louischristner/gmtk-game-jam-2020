@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask m_WhatIsGround;  // A mask determining what is ground to the character
 	[SerializeField] private Transform m_GroundCheck;   // A position marking where to check if the player is grounded.
 
-    [Range(0f, 1f)] public float airControl;
+    [Range(0f, 2f)] public float airControl;
 
     public float moveSpeed = 5f;
     public float jumpForce = 500f;
