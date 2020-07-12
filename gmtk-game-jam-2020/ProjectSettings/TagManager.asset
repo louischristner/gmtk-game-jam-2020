@@ -8,6 +8,7 @@ TagManager:
   - spike
   - checkpoint
   - deathzone
+  - exit
   layers:
   - Default
   - TransparentFX

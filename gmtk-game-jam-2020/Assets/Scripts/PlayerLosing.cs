@@ -18,11 +18,18 @@ public class PlayerLosing : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "spike" || collider.gameObject.tag == "deathzone") {
-            kcCounter.Reset();
-            player.transform.position = savedPosition;
+            StartCoroutine(ResetToCheckpoint());
         } else if (collider.gameObject.tag == "checkpoint") {
             savedPosition = player.transform.position;
             Debug.Log("saved");
         }
+    }
+
+    IEnumerator ResetToCheckpoint()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        kcCounter.Reset();
+        player.transform.position = savedPosition;
     }
 }
