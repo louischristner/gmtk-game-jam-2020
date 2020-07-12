@@ -22,11 +22,19 @@ public class PlayerMovement : MonoBehaviour
     bool canJump = true;
     bool isFacingRight = true;
 
+    KeyCode savedKeyUp;
+    KeyCode savedKeyLeft;
+    KeyCode savedKeyRight;
+
     Rigidbody2D rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        savedKeyUp = keyUp;
+        savedKeyLeft = keyLeft;
+        savedKeyRight = keyRight;
     }
 
     void Update()
@@ -120,5 +128,12 @@ public class PlayerMovement : MonoBehaviour
         keyUp = up;
         keyLeft = left;
         keyRight = right;
+    }
+
+    public void ResetKeyMapping()
+    {
+        keyUp = savedKeyUp;
+        keyLeft = savedKeyLeft;
+        keyRight = savedKeyRight;
     }
 }

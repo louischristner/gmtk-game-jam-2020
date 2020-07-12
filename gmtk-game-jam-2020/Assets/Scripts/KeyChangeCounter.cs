@@ -26,4 +26,10 @@ public class KeyChangeCounter : MonoBehaviour
             counterSlider.value = 0;
         }
     }
+
+    public void Reset()
+    {
+        player.GetComponent<PlayerMovement>().ResetKeyMapping();
+        counterSlider.value = 0;
+    }
 }
