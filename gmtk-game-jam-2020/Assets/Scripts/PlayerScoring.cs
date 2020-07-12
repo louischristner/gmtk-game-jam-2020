@@ -7,10 +7,18 @@ public class PlayerScoring : MonoBehaviour
 {
     public GameObject scoreManager;
 
+    private SoundHandler soundHandler;
+
+    void Start()
+    {
+        soundHandler = GetComponent<SoundHandler>();
+    }
+
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "diamond") {
             scoreManager.GetComponent<ScoreManager>().value += collider.gameObject.GetComponent<DiamondValues>().Collect();
+            soundHandler.PlayCoin();
             Destroy(collider.gameObject);
         }
 

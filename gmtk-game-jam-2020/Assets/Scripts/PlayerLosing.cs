@@ -8,27 +8,30 @@ public class PlayerLosing : MonoBehaviour
     public GameObject player;
     public KeyChangeCounter kcCounter;
 
+    private SoundHandler soundHandler;
+
     Vector3 savedPosition;
 
     void Start()
     {
         savedPosition = player.transform.position;
+
+        soundHandler = GetComponent<SoundHandler>();
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "spike" || collider.gameObject.tag == "deathzone") {
-            StartCoroutine(ResetToCheckpoint());
+            ResetToCheckpoint();
         } else if (collider.gameObject.tag == "checkpoint") {
             savedPosition = player.transform.position;
             Debug.Log("saved");
         }
     }
 
-    IEnumerator ResetToCheckpoint()
+    void ResetToCheckpoint()
     {
-        yield return new WaitForSeconds(0.2f);
-
+        soundHandler.PlayHit();
         kcCounter.Reset();
         player.transform.position = savedPosition;
     }

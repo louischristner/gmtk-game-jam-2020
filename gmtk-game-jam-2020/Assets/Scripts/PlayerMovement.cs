@@ -109,12 +109,14 @@ public class PlayerMovement : MonoBehaviour
 
     public void UpdateKeyMapping()
     {
+        int index = 0;
         KeyCode up, left, right;
-
         List<KeyCode> everyKeys = new List<KeyCode> {keyUp, keyLeft, keyRight};
 
-        int index = Random.Range(0, everyKeys.Count);
-        up = everyKeys[index];
+        do {
+            index = Random.Range(0, everyKeys.Count);
+            up = everyKeys[index];
+        } while (up == keyUp);
         everyKeys.Remove(everyKeys[index]);
 
         index = Random.Range(0, everyKeys.Count);
