@@ -33,7 +33,6 @@ public class KeyChangeCounter : MonoBehaviour
 
     public void Reset()
     {
-        player.GetComponent<PlayerMovement>().ResetKeyMapping();
         counterSlider.value = 0;
     }
 }
